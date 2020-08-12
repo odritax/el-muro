@@ -29,9 +29,9 @@ const store = new Vuex.Store({
         }else if(new_error=="The email address is already in use by another account."){
             state.error="Intente con otro email el ingresado ya existe";
         }else if(new_error=="The password is invalid or the user does not have a password."){
-            state.error="La contraseña es incorrecta";
+            state.error="Error de login ingrese nuevamente su usuario y contraseña";
         }else if(new_error=="There is no user record corresponding to this identifier. The user may have been deleted."){
-            state.error="El usuario no existe"
+            state.error="Error de login ingrese nuevamente su usuario y contraseña"
         }else{
             state.error=new_error;
         }
@@ -43,9 +43,15 @@ const store = new Vuex.Store({
         //cuando el registro es exitoso
          .then(function(respuesta){
              console.log(respuesta)
-             context.commit('set_error', null);
-             context.commit('set_user', datos.email);
-             router.push('/success');
+             firebase.auth().currentUser.updateProfile({
+                 displayName: datos.nombre
+             });
+         })
+         .then(function(respuesta){
+            console.log(respuesta)
+            context.commit('set_error', null);
+            context.commit('set_user',{email:datos.email, name:datos.name});
+            router.push('/');
          })
          .catch(function(error){
              console.log(error)
@@ -58,15 +64,25 @@ const store = new Vuex.Store({
         .then(function(response){
           console.log(response)
           console.log(datos.email)
+          var name= firebase.auth().currentUser.displayName;
           context.commit('set_error', null);
-          context.commit('set_user', datos.email);
-          router.push('/success');
+          context.commit('set_user',{email:datos.email,name:name});
+          router.push('/');
         })
         .catch(function(error){
           context.commit('set_error', error.message);
           context.commit('set_user', null);
         })
       },
+      Salir(context){
+        firebase.auth().signOut()
+        .then(function(response){
+          console.log(response)
+          context.commit('set_error', null);
+          context.commit('set_user', null);
+          router.push('/login');
+        })
+      }
   }
 })
 new Vue({

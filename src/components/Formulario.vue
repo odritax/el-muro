@@ -1,6 +1,6 @@
 <template>
   <div id="formulario">
-    <router-link :to="{path:'/'}" id="boton" class="waves-effect waves-light btn-small right">Login</router-link>
+    <router-link :to="{path:'/login'}" id="boton" class="waves-effect waves-light btn-small right">Login</router-link>
     <div class="row">
       <form v-on:submit.prevent="Registrar">
         <div class="col s12 m8 l4 offset-m2 offset-l4">
@@ -9,6 +9,10 @@
               <h5 id="titulo">Registro</h5>
             </div>
             <div class="card-content">
+              <div class="input-field">
+                <label>Nombre</label>
+                <input type="text" v-model="nombre" class="validate" required>
+              </div>
               <div class="input-field">
                 <label>Email</label>
                 <input type="email" v-model="usuario" class="validate" required>
@@ -37,6 +41,7 @@ export default {
   name: "Formulario",
   data(){
     return{
+    nombre:"",
     usuario: "",
     pass1:"",
     pass2:""
@@ -55,7 +60,7 @@ export default {
       // document.getElementById('validar').setCustomValidity('Las contraseñas no coinciden');
       return;
     }
-    const datos={email:this.usuario,password:this.pass1}
+    const datos={email:this.usuario,password:this.pass1,name:this.nombre}
     this.$store.dispatch("registro",datos);
   //   this.$store.commit("setUserId",this.usuario);
     }
