@@ -3,8 +3,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from 'firebase/app';
 import 'firebase/auth'
+import VueFirestore from 'vue-firestore';
 import './firebase.js'
-// import VueFirestore from 'vue-firestore';
 import App from './App.vue';
 import router from './router';  // añadimos esta línea
 import 'materialize-css/dist/css/materialize.min.css'
@@ -13,11 +13,12 @@ import 'materialize-css/dist/js/materialize.min.js'
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
-// Vue.use(VueFirestore, {key: 'id'});
+Vue.use(VueFirestore, {key: 'id'});
 const store = new Vuex.Store({
   state: {
       user: null,
-      error: null
+      error: null,
+      likes:0
   },
   mutations: {
     set_user(state, new_user) {
@@ -65,8 +66,9 @@ const store = new Vuex.Store({
           console.log(response)
           console.log(datos.email)
           var name= firebase.auth().currentUser.displayName;
+          var id= firebase.auth().currentUser.uid;
           context.commit('set_error', null);
-          context.commit('set_user',{email:datos.email,name:name});
+          context.commit('set_user',{email:datos.email,name:name,id:id});
           router.push('/');
         })
         .catch(function(error){
