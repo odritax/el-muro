@@ -1,5 +1,6 @@
 <template>
   <div id="posts"> 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <nav>
     <div class="nav-wrapper #4db6ac teal lighten-2">
       <a href="#" class="brand-logo">Logo</a>
@@ -22,10 +23,11 @@
           <h5>Comentarios</h5>
           <ul v-for="post in posts" :key="post.id" class="collection">
             <li class="collection-item avatar">
+              <!-- <input type="hidden" v-model="like" :value="(post.likes)" > -->
               <img src="../assets/logo.png" alt="" class="circle">
               <span class="title">{{post.usuario_nombre}}</span>
               <p>{{post.comentario}}</p>
-              <a href="" class="secondary-content">{{post.likes}} likes</a>
+              <p class="secondary-content">{{post.likes}}<a v-on:click="Like(post.id)" class="secondary-content"><i class="material-icons">thumb_up</i></a></p>
             </li>
           </ul>
         </div>
@@ -42,7 +44,6 @@ export default {
     return{
       posts:[],
       comentario:'',
-      like:''
     }
   },
   firestore(){
@@ -59,14 +60,24 @@ export default {
     Salir(){
       this.$store.dispatch('Salir');
     },
-    Registrar(){
-      db.collection('posts').add({
-       usuario_id: this.$store.state.user.id,
-       usuario_nombre: this.$store.state.user.name,
-       comentario:this.comentario,
-       likes:0
+      Registrar(){
+        db.collection('posts').add({
+          usuario: {
+            nombre: this.$store.state.user.name, 
+            id:this.$store.state.user.id,
+          }, 
+        comentario:this.comentario,
+        likes:0
+        })
+        this.comentario=""
+      },
+    Like(id){
+      //extraigo la fila con el id para despues modificarla
+       const post = this.posts.find(post => post.id == id);
+      // actualizo en la base de datos
+      this.$firestore.posts.doc(id).update({
+        likes: post.likes+1
       })
-      this.comentario=""
     }
   }
 }
