@@ -9,6 +9,9 @@ import App from './App.vue';
 import router from './router';  // añadimos esta línea
 import 'materialize-css/dist/css/materialize.min.css'
 import 'materialize-css/dist/js/materialize.min.js'
+import ReadMore from 'vue-read-more';
+ 
+Vue.use(ReadMore);
 
 Vue.config.productionTip = false
 

@@ -11,8 +11,10 @@
     "core-js": "^3.6.5",
     "firebase": "^7.17.2",
     "materialize": "^1.0.0",
+    "readmore-js": "^2.2.1",
     "vue": "^2.6.11",
     "vue-firestore": "^0.3.30",
+    "vue-read-more": "^1.1.1",
     "vue-router": "^3.4.2",
     "vuex": "^3.5.1"
   },
