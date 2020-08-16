@@ -12,7 +12,7 @@
       </ul>
     </div>
   </nav>
-    <h3>Bienvenido {{user.name}}</h3>
+    <h3>Hola {{user.name}}</h3>
     <div class="row">
       <form  @submit.prevent="Registrar" action="">
         <div class="col m4"></div>
@@ -21,7 +21,7 @@
           <label for="textarea2">Escribe un comentario</label>
           <input type="submit" class="waves-effect waves-light btn-small" value="Comentar"><br><br>
           <h5>Comentarios</h5>
-          <Post v-for="post in posts" :key="post.id" :post_id="post.id"/>
+          <Post v-for="post in posts" :key="post.id" :post_id="post.id" :post="post"/>
         </div>
        </form>
       </div>
@@ -37,7 +37,6 @@ export default {
     return{
       posts:[],
       comentario:'',
-      likes:[],
     }
   },
   components:{
@@ -66,13 +65,7 @@ export default {
         comentario:this.comentario,
         contador:0,
         fecha:firebase.firestore.FieldValue.serverTimestamp(), 
-        likes:[
-        //   {
-        //   like:"",
-        //   nombre_usuario:"",
-        //   id_usuario:""
-        // }
-        ]
+        likes:[]
         })
         this.comentario=""
       },

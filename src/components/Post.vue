@@ -17,17 +17,8 @@ import firebase from 'firebase/app';
 export default {
   name: "Post",
   props:{
-    post_id:String
-  },
-  data(){
-    return {
-      post: []
-    }
-  },
-  firestore() {
-    return {
-      post: db.collection('posts').doc(this.post_id)
-    }
+    post_id:String,
+    post:Object
   },
   methods:{
     Like(){
@@ -43,40 +34,17 @@ export default {
                 nombre_usuario:this.$store.state.user.name,
                 id_usuario:this.$store.state.user.id
               })
-        })
-        }else{
-        // en caso contrario le debo agregar el like
-        db.collection("posts").doc(post.id).update({
-          contador: post.contador+1,
-          likes: [...this.post.likes, {like:"true",
-                    nombre_usuario:this.$store.state.user.name,
-                    id_usuario: this.$store.state.user.id}]
-        })
-      }
-      /*
-      this.likes=likes
-      for(let i=0;i<likes.length;i++){
-        if(likes[i].id_usuario!=this.$store.state.user.id && likes[i].nombre_usuario!=this.$store.state.user.name){
-            //extraigo la fila con el id para despues modificarla
-           db.collection("posts").doc(id).update({
+        })}else{
+          // en caso contrario le debo agregar el like
+          db.collection("posts").doc(post.id).update({
             contador: post.contador+1,
-            likes: [...this.likes,{like:"true",
-                                  nombre_usuario:this.$store.state.user.name,
-                                  id_usuario: this.$store.state.user.id}]
-        })
+            likes: [...this.post.likes, {
+                      like:"true",
+                      nombre_usuario:this.$store.state.user.name,
+                      id_usuario: this.$store.state.user.id}]
+          })
         }
-        else if(likes[i].id_usuario==this.$store.state.user.id&&likes[i].like=="true"){
-         db.collection("posts").doc(id).update({
-              contador: post.contador-1,
-              likes:firebase.firestore.FieldValue.arrayRemove({
-                like:"true",
-                nombre_usuario:this.$store.state.user.name,
-                id_usuario:this.$store.state.user.id
-              })
-            })
-        }
-      }*/
-      }
+    }
   }
 }
 </script>
