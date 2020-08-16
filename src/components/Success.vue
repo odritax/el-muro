@@ -21,18 +21,16 @@
           <label for="textarea2">Escribe un comentario</label>
           <input type="submit" class="waves-effect waves-light btn-small" value="Comentar"><br><br>
           <h5>Comentarios</h5>
-          <Post v-for="post in posts" :key="post.id" pos_id="post.id"/>
+          <Post v-for="post in posts" :key="post.id" :post_id="post.id"/>
         </div>
        </form>
       </div>
   </div>
 </template>
 <script>
-
 import { db } from '@/firebase';
 import firebase from 'firebase/app';
 import Post from '@/components/Post.vue'
-
 export default {
   name:'Success',
   data(){

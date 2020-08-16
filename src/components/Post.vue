@@ -13,7 +13,7 @@
 </template>
 <script>
 import { db } from '@/firebase';
-//import firebase from 'firebase/app';
+import firebase from 'firebase/app';
 export default {
   name: "Post",
   props:{
@@ -21,7 +21,7 @@ export default {
   },
   data(){
     return {
-      post: {}
+      post: []
     }
   },
   firestore() {
@@ -34,13 +34,17 @@ export default {
       const post = this.post
       const like_usuario = post.likes.find(li => li.id_usuario == this.$store.state.user.id)
       if (like_usuario) {
-        // si el like ya existe, se lo tengo q sacar
-        const nuevos_likes = post.likes.filter(li => li.id_usuario = this.$store.state.user.id)
+         // si el like ya existe, se lo tengo q sacar
+        // const nuevos_likes = post.likes.filter(li => li.id_usuario = this.$store.state.user.id)
         db.collection("posts").doc(post.id).update({
           contador: post.contador-1,
-          likes: nuevos_likes
+          likes:firebase.firestore.FieldValue.arrayRemove({
+                like:"true",
+                nombre_usuario:this.$store.state.user.name,
+                id_usuario:this.$store.state.user.id
+              })
         })
-      } else {
+        }else{
         // en caso contrario le debo agregar el like
         db.collection("posts").doc(post.id).update({
           contador: post.contador+1,
