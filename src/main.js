@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth'
 import VueFirestore from 'vue-firestore';
 import './firebase.js'
+import 'firebase/storage';//para guardar imagenes
 import App from './App.vue';
 import router from './router';  // añadimos esta línea
 import 'materialize-css/dist/css/materialize.min.css'
@@ -44,24 +45,27 @@ const store = new Vuex.Store({
   actions: {
      registro(context,datos){
         firebase.auth().createUserWithEmailAndPassword(datos.email, datos.password)          
-        //cuando el registro es exitoso
-         .then(function(respuesta){
-             console.log(respuesta)
-             firebase.auth().currentUser.updateProfile({
-                 displayName: datos.nombre
-             });
-         })
          .then(function(respuesta){
             console.log(respuesta)
             context.commit('set_error', null);
             context.commit('set_user',{email:datos.email, name:datos.name});
-            router.push('/');
+            router.push('/login');
          })
          .catch(function(error){
              console.log(error)
              context.commit('set_error', error.message);
              context.commit('set_user', null);
          })
+          firebase.storage().ref('users/'+datos.file.name).put(datos.file)
+         .then(function(){
+            firebase.storage().ref('users/'+datos.file.name).put(datos.file).snapshot.ref.getDownloadURL()
+          .then(function(url){
+            firebase.auth().currentUser.updateProfile({
+              photoURL:url,
+              displayName: datos.name
+          });
+          })
+         }) 
      },
      login(context,datos){
         firebase.auth().signInWithEmailAndPassword(datos.email, datos.password)
@@ -70,8 +74,9 @@ const store = new Vuex.Store({
           console.log(datos.email)
           var name= firebase.auth().currentUser.displayName;
           var id= firebase.auth().currentUser.uid;
+          var urlPhoto= firebase.auth().currentUser.photoURL;
           context.commit('set_error', null);
-          context.commit('set_user',{email:datos.email,name:name,id:id});
+          context.commit('set_user',{email:datos.email,name:name,id:id,urlPhoto: urlPhoto});
           router.push('/');
         })
         .catch(function(error){

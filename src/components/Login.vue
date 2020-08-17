@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="login">
     <div class="row">
       <form v-on:submit.prevent="Login">
         <div class="col s12 m8 l4 offset-m2 offset-l4">
@@ -50,4 +50,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+#login{
+  margin-top:50px;
+}
+
+</style>
 

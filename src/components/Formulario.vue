@@ -17,6 +17,15 @@
                 <label>Email</label>
                 <input type="email" v-model="usuario" class="validate" required>
               </div>
+              <div class="file-field input-field">
+                <div class="btn">
+                  <span>File</span>
+                  <input type="file" @change="saveimage" accept="image/*">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text">
+                </div>
+            </div>
               <div class="input-field">
                 <label>Contraseña</label>
                 <input type="text" v-model="pass1" class="validate" required>
@@ -44,7 +53,8 @@ export default {
     nombre:"",
     usuario: "",
     pass1:"",
-    pass2:""
+    pass2:"",
+    file:null
     }
   },
   computed:{
@@ -60,14 +70,24 @@ export default {
       // document.getElementById('validar').setCustomValidity('Las contraseñas no coinciden');
       return;
     }
-    const datos={email:this.usuario,password:this.pass1,name:this.nombre}
+    const datos={email:this.usuario,password:this.pass1,name:this.nombre,file:this.file}
     this.$store.dispatch("registro",datos);
   //   this.$store.commit("setUserId",this.usuario);
+    },
+    saveimage(ev){
+     // Si el input no tiene archivo, salgo altiro
+      if (ev.target.files.length == 0) {
+        return;
+      }
+      this.file = ev.target.files[0];
     }
   }
 }
 </script>
 <style>
+#formulario{
+  margin-top:50px;
+}
 #boton{
   position: relative;
   top: -50px;
