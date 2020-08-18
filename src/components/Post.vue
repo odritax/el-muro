@@ -7,8 +7,8 @@
         <read-more more-str="leer más..." :text="post.comentario" link="#" less-str="leer menos.." :max-chars="115"></read-more>
         <p>
           <span class="fecha">{{post.fecha}}</span>
-          <a v-on:click="Like(post.id)" >
-            <i class="material-icons" v-bind:class="{like: post.likes.id_usuario == this.$store.state.user.id,dislike: post.likes.id_usuario != this.$store.state.user.id}" >favorite</i>
+          <a v-on:click="Like(post.id)">
+            <i class="material-icons" v-bind:class="ClaseLike">favorite</i>
           </a>
           <span class="likes">{{post.contador}}</span>
         </p>
@@ -19,16 +19,42 @@
 <script>
 import { db } from '@/firebase';
 import firebase from 'firebase/app';
+
 export default {
   name: "Post",
   props:{
     post_id:String,
     post:Object
   },
+  data(){
+    return{
+    likes:[],
+    nombres:{}
+    }
+  },
   computed:{
     user(){
       return this.$store.state.user
-    }
+    },
+    ClaseLike(){
+      let p=false
+      const like_usuario = this.likes.find(li => li.id_usuario == this.$store.state.user.id)
+      if(like_usuario){
+        p=true
+      }else{
+        p=false
+      }
+      return{
+        like:p==true,
+        dislike:p==false
+      }
+    },
+  },
+  mounted() {
+   this.likes=this.post.likes
+  },
+  updated() {
+   this.likes=this.post.likes
   },
   methods:{
     Like(){
@@ -43,7 +69,8 @@ export default {
                 nombre_usuario:this.$store.state.user.name,
                 id_usuario:this.$store.state.user.id,
               })
-        })}else{
+        })
+        }else{
           // en caso contrario le debo agregar el like
           db.collection("posts").doc(post.id).update({
             contador: post.contador+1,
@@ -52,6 +79,7 @@ export default {
                       id_usuario: this.$store.state.user.id}]
           })
         }
+
     }
   }
 }

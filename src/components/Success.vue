@@ -73,7 +73,7 @@ export default {
         }, 
       comentario:this.comentario,
       contador:0,
-      fecha:getDate(), 
+      fecha:getDate(),
       // firebase.firestore.FieldValue.serverTimestamp(),
       likes:[]
       })
